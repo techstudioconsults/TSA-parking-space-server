@@ -1,4 +1,2 @@
 node_modules/
 config/config.env
-git push-u origin main
-git push-u origin main.pub
