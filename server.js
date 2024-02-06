@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === "development") {
 
 const PORT = process.env.PORT || 5000;
 
-const start = async () => {
+const startServer = async () => {
   try {
     await connectDB(process.env.MONGO_URI);
     console.log(`DB Connected!`);
@@ -47,4 +47,4 @@ const start = async () => {
   }
 };
 
-start();
+startServer();
