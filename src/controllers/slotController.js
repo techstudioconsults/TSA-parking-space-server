@@ -57,3 +57,4 @@ const updateSlot = async (req, res) => {
 };
 
 module.exports = { getAllSlots, updateSlot, getSingleSlot };
+  
