@@ -32,7 +32,7 @@ const updateSlot = async (req, res) => {
   const student = await User.findOne({ studentId });
 
   if (!student) {
-    return res.status(400).json({ message: `No student with ID:${studentId}` });
+    return res.status(404).json({ message: `No student with ID:${studentId}` });
   }
 
   const { slotNumber } = req.params;
@@ -52,9 +52,8 @@ const updateSlot = async (req, res) => {
       .status(200)
       .json({ message: "Parking Confirmed!", slotNumber: slot.slotNumber });
   } catch (error) {
-    return res.status(500).json({ message: "ooppss", error: error });
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 module.exports = { getAllSlots, updateSlot, getSingleSlot };
-  
