@@ -1,0 +1,32 @@
+[
+  {
+    "studentId": "TSA/JFS001",
+    "name": "John Doe",
+    "cohort": "2024/JAN/JSF"
+  },
+  {
+    "studentId": "TSA/ABF002",
+    "name": "David Kyle",
+    "cohort": "2024/JAN/JSF"
+  },
+  {
+    "studentId": "TSA/PFP232",
+    "name": "Tim Cook",
+    "cohort": "2024/JAN/JSF"
+  },
+  {
+    "studentId": "TSA/WWE870",
+    "name": "Wale Adenuga",
+    "cohort": "2024/JAN/JSF"
+  },
+  {
+    "studentId": "TSA/OMO431",
+    "name": "Mercy Johnson",
+    "cohort": "2024/JAN/JSF"
+  },
+  {
+    "studentId": "TSA/QST234",
+    "name": "Mike Stevens",
+    "cohort": "2024/JAN/JSF"
+  }
+]

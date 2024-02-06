@@ -1,0 +1,42 @@
+[
+  {
+    "slotNumber": 1,
+    "isAvailable": true
+  },
+  {
+    "slotNumber": 2,
+    "isAvailable": true
+  },
+  {
+    "slotNumber": 3,
+    "isAvailable": true
+  },
+  {
+    "slotNumber": 4,
+    "isAvailable": true
+  },
+  {
+    "slotNumber": 5,
+    "isAvailable": true
+  },
+  {
+    "slotNumber": 6,
+    "isAvailable": true
+  },
+  {
+    "slotNumber": 7,
+    "isAvailable": true
+  },
+  {
+    "slotNumber": 8,
+    "isAvailable": true
+  },
+  {
+    "slotNumber": 9,
+    "isAvailable": true
+  },
+  {
+    "slotNumber": 10,
+    "isAvailable": true
+  }
+]
