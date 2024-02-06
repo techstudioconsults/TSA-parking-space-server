@@ -1,6 +1,6 @@
 /** @format */
 
-require("dotenv").config({ path: "./src/config/config.env" });
+require("dotenv").config({ path: ".env" });
 
 const Slot = require("./src/models/slot");
 const User = require("./src/models/user");

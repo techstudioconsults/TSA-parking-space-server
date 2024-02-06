@@ -10,7 +10,7 @@ const notFound = require("./src/middlewares/notFound");
 const error = require("./src/middlewares/error");
 
 // Load env variables
-dotenv.config({ path: "./src/config/config.env" });
+dotenv.config({ path: ".env" });
 
 const app = express();
 
