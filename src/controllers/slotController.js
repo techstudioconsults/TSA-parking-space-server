@@ -21,7 +21,6 @@ const getSingleSlot = async (req, res) => {
       .populate("occupiedBy", "-__v -createdAt -updatedAt")
       .select("-__v -createdAt -updatedAt");
 
-
     if (!slot) {
       return res
         .status(404)
@@ -43,16 +42,19 @@ const updateSlot = async (req, res) => {
       return res.status(400).json({ message: "Please provide studentId" });
     }
 
-    const student = await User.findOne({ studentId })
-      .select("-__v -createdAt -updatedAt");
+    const student = await User.findOne({ studentId }).select(
+      "-__v -createdAt -updatedAt"
+    );
 
     if (!student) {
-      return res.status(400).json({ message: `No student with ID:${studentId}` });
+      return res
+        .status(400)
+        .json({ message: `No student with ID:${studentId}` });
     }
 
     const slot = await Slot.findOneAndUpdate(
       { slotNumber },
-      { isAvailable: false, occupiedBy: student._id },
+      { isAvailable: false, occupiedBy: student._id }
     );
 
     if (slot) {
@@ -65,7 +67,7 @@ const updateSlot = async (req, res) => {
         await student.save();
         await Slot.findOneAndUpdate(
           { slotNumber },
-          { isAvailable: true, occupiedBy: null },
+          { isAvailable: true, occupiedBy: null }
         );
         console.log(`Slot expired for student ${studentId}`);
       }, 60 * 1000); // 10 hours in milliseconds
@@ -77,8 +79,11 @@ const updateSlot = async (req, res) => {
         .json({ message: `Slot ${slotNumber} does not exist` });
     }
 
-    return res
-      .json({ message: "Parking Confirmed!", slotNumber: slot.slotNumber, student });
+    return res.json({
+      message: "Parking Confirmed!",
+      slotNumber: slot.slotNumber,
+      student,
+    });
   } catch (error) {
     console.error("Error updating slot", error);
     res.status(500).json({ message: "Internal Server Error", error });
@@ -98,10 +103,14 @@ const getAllUsers = async (req, res) => {
 const getSingleStudent = async (req, res) => {
   try {
     const { studentId } = req.body;
-    const student = await User.findOne({ studentId }).select("-__v -createdAt -updatedAt");
+    const student = await User.findOne({ studentId }).select(
+      "-__v -createdAt -updatedAt"
+    );
 
     if (!student) {
-      return res.status(404).json({ message: `Student with ID ${studentId} not found` });
+      return res
+        .status(404)
+        .json({ message: `Student with ID ${studentId} not found` });
     }
 
     res.json({ student });
@@ -121,4 +130,11 @@ const refreshSlotAvailability = async (req, res) => {
   }
 };
 
-module.exports = { getAllSlots, updateSlot, getSingleSlot, getAllUsers, getSingleStudent, refreshSlotAvailability };
+module.exports = {
+  getAllSlots,
+  updateSlot,
+  getSingleSlot,
+  getAllUsers,
+  getSingleStudent,
+  refreshSlotAvailability,
+};
