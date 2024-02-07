@@ -13,8 +13,12 @@ const start = async () => {
     await connectDB(`${process.env.MONGO_URI}`);
     console.log("DB connected!");
     console.log("Uploading...");
+    
+    // To populate slots
     // await Slot.deleteMany();
     // await Slot.create(slotData);
+
+    // To populate users
     await User.deleteMany();
     await User.create(userData);
     console.log("Data Uploaded successfully");
