@@ -11,6 +11,12 @@ const userSchema = new mongoose.Schema(
     cohort: {
       type: String,
     },
+    slot: {
+      type: Number,
+      default: null
+    },
+
+
   },
   {
     timestamps: true,
