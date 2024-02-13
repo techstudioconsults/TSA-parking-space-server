@@ -94,7 +94,7 @@ const getSingleStudent = asyncHandler(async (req, res) => {
     if (!student) {
       return res
         .status(404)
-        .json({ message: `Student with ID ${studentId} not found` });
+        .json({success: false, message: `Student with ID ${studentId} not found` });
     }
 
     res.json({ student });
