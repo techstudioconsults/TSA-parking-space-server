@@ -11,7 +11,7 @@ const getAllSlots = asyncHandler (async (req, res) => {
 });
 
 const getSingleSlot =  asyncHandler (async (req, res) => {
-    const { slotNumber } = req.params;
+    const { slotNumber } = req.body;
     const slot = await Slot.findOne({ slotNumber })
       .populate("occupiedBy", "-__v -createdAt -updatedAt")
       .select("-__v -createdAt -updatedAt");
