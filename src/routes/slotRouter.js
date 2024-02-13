@@ -16,7 +16,7 @@ router
 router
 .route("/users").get(getAllUsers).all(methodNotAllowed);
 router
-.route("/user").get(getSingleStudent).all(methodNotAllowed);
+.route("/user/:studentId").get(getSingleStudent).all(methodNotAllowed);
 router
 .route("/refresh").post(refreshSlotAvailability).all(methodNotAllowed);
 router

@@ -102,7 +102,7 @@ const getAllUsers = async (req, res) => {
 
 const getSingleStudent = async (req, res) => {
   try {
-    const { studentId } = req.body;
+    const { studentId } = req.params;
     const student = await User.findOne({ studentId }).select(
       "-__v -createdAt -updatedAt"
     );
@@ -110,7 +110,7 @@ const getSingleStudent = async (req, res) => {
     if (!student) {
       return res
         .status(404)
-        .json({ message: `Student with ID ${studentId} not found` });
+        .json({success: false, message: `Student with ID ${studentId} not found` });
     }
 
     res.json({ student });
