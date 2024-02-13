@@ -1,21 +1,16 @@
 const Slot = require("../models/slot");
 const User = require("../models/user");
+const asyncHandler = require('../middlewares/async');
 
-const getAllSlots = async (req, res) => {
-  try {
+const getAllSlots = asyncHandler (async (req, res) => {
     const slots = await Slot.find({})
       .sort({ slotNumber: 1 })
       .populate("occupiedBy", "-__v -createdAt -updatedAt")
       .select("-__v -createdAt -updatedAt");
     res.status(200).json({ slots });
-  } catch (error) {
-    console.error("Error fetching slots", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+});
 
-const getSingleSlot = async (req, res) => {
-  try {
+const getSingleSlot =  asyncHandler (async (req, res) => {
     const { slotNumber } = req.params;
     const slot = await Slot.findOne({ slotNumber })
       .populate("occupiedBy", "-__v -createdAt -updatedAt")
@@ -27,14 +22,11 @@ const getSingleSlot = async (req, res) => {
         .json({ message: `Slot ${slotNumber} does not exist` });
     }
     res.status(200).json({ slot });
-  } catch (error) {
-    console.error("Error fetching single slot", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+ 
+});
 
-const updateSlot = async (req, res) => {
-  try {
+const updateSlot = asyncHandler(async (req, res) => {
+  
     const { studentId } = req.body;
     const { slotNumber } = req.params;
 
@@ -70,7 +62,7 @@ const updateSlot = async (req, res) => {
           { isAvailable: true, occupiedBy: null }
         );
         console.log(`Slot expired for student ${studentId}`);
-      }, 60 * 1000); // 10 hours in milliseconds
+      }, 60 * 60 * 1000); // 10 hours in milliseconds
     }
 
     if (!slot) {
@@ -84,24 +76,16 @@ const updateSlot = async (req, res) => {
       slotNumber: slot.slotNumber,
       student,
     });
-  } catch (error) {
-    console.error("Error updating slot", error);
-    res.status(500).json({ message: "Internal Server Error", error });
-  }
-};
+ 
+});
 
-const getAllUsers = async (req, res) => {
-  try {
+const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find({}).select("-__v -createdAt -updatedAt");
     res.status(200).json({ users });
-  } catch (error) {
-    console.error("Error fetching users", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
 
-const getSingleStudent = async (req, res) => {
-  try {
+});
+
+const getSingleStudent = asyncHandler(async (req, res) => {
     const { studentId } = req.body;
     const student = await User.findOne({ studentId }).select(
       "-__v -createdAt -updatedAt"
@@ -114,21 +98,14 @@ const getSingleStudent = async (req, res) => {
     }
 
     res.json({ student });
-  } catch (error) {
-    console.error("Error fetching single student", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-};
+ 
+});
 
-const refreshSlotAvailability = async (req, res) => {
-  try {
+const refreshSlotAvailability = asyncHandler(async (req, res) => {
     await Slot.updateMany({}, { isAvailable: true, occupiedBy: null });
     res.json({ message: "Slot availability refreshed successfully." });
-  } catch (error) {
-    console.error("Error refreshing slot availability:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
+  
+});
 
 module.exports = {
   getAllSlots,
