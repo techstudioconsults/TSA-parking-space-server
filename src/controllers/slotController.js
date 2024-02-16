@@ -11,7 +11,7 @@ const getAllSlots = asyncHandler (async (req, res) => {
 });
 
 const getSingleSlot =  asyncHandler (async (req, res) => {
-    const { slotNumber } = req.body;
+    const { slotNumber } = req.params;
     const slot = await Slot.findOne({ slotNumber })
       .populate("occupiedBy", "-__v -createdAt -updatedAt")
       .select("-__v -createdAt -updatedAt");
@@ -86,7 +86,7 @@ const getAllUsers = asyncHandler(async (req, res) => {
 });
 
 const getSingleStudent = asyncHandler(async (req, res) => {
-    const { studentId } = req.body;
+    const { studentId } = req.params;
     const student = await User.findOne({ studentId }).select(
       "-__v -createdAt -updatedAt"
     );
