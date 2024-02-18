@@ -25,60 +25,6 @@ const getSingleSlot =  asyncHandler (async (req, res) => {
  
 });
 
-// const updateSlot = asyncHandler(async (req, res) => {
-  
-//     const { studentId } = req.body;
-//     const { slotNumber } = req.params;
-
-//     if (!studentId) {
-//       return res.status(400).json({ message: "Please provide studentId" });
-//     }
-
-//     const student = await User.findOne({ studentId }).select(
-//       "-__v -createdAt -updatedAt"
-//     );
-
-//     if (!student) {
-//       return res
-//         .status(400)
-//         .json({ message: `No student with ID:${studentId}` });
-//     }
-
-//     const slot = await Slot.findOneAndUpdate(
-//       { slotNumber },
-//       { isAvailable: false, occupiedBy: student._id }
-//     );
-
-//     if (slot) {
-//       student.slot = slotNumber;
-//       await student.save();
-
-//       // Schedule expiration after 10 hours
-//       setTimeout(async () => {
-//         student.slot = null;
-//         await student.save();
-//         await Slot.findOneAndUpdate(
-//           { slotNumber },
-//           { isAvailable: true, occupiedBy: null }
-//         );
-//         console.log(`Slot expired for student ${studentId}`);
-//       }, 60 * 60 * 1000); // 10 hours in milliseconds
-//     }
-
-//     if (!slot) {
-//       return res
-//         .status(404)
-//         .json({ message: `Slot ${slotNumber} does not exist` });
-//     }
-
-//     return res.json({
-//       message: "Parking Confirmed!",
-//       slotNumber: slot.slotNumber,
-//       student,
-//     });
- 
-// });
-
 const updateSlot = asyncHandler(async (req, res) => {
   const { studentId } = req.body;
   const { slotNumber } = req.params;
@@ -124,12 +70,10 @@ const updateSlot = asyncHandler(async (req, res) => {
     setTimeout(async () => {
       student.slot = null;
       await student.save();
-      await Slot.findOneAndUpdate(
-        { slotNumber },
-        { isAvailable: true, occupiedBy: null }
-      );
+      await Slot.findOneAndUpdate({ slotNumber }, { isAvailable: true, occupiedBy: null });
+      await User.updateMany({}, { slot: null });
       console.log(`Slot expired for student ${studentId} in slot ${slotNumber}`);
-    },  60 * 60 * 1000); 
+    }, 10 * 60 * 60 * 1000); 
   }
 
   return res.json({
@@ -164,8 +108,8 @@ const getSingleStudent = asyncHandler(async (req, res) => {
 
 const refreshSlotAvailability = asyncHandler(async (req, res) => {
     await Slot.updateMany({}, { isAvailable: true, occupiedBy: null });
-    res.json({ message: "Slot availability refreshed successfully." });
-  
+    await User.updateMany({}, { slot: null });
+    res.json({ message: "Slot availability refreshed successfully." });  
 });
 
 module.exports = {
