@@ -129,7 +129,7 @@ const updateSlot = asyncHandler(async (req, res) => {
         { isAvailable: true, occupiedBy: null }
       );
       console.log(`Slot expired for student ${studentId} in slot ${slotNumber}`);
-    },  60 * 60 * 1000); 
+    },  60 * 1000); 
   }
 
   return res.json({
