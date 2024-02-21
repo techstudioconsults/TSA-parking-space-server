@@ -51,7 +51,6 @@ const updateSlot = asyncHandler(async (req, res) => {
     });
   }
 
-
   const slot = await Slot.findOneAndUpdate(
     { slotNumber, isAvailable: true, occupiedBy: null }, 
     { isAvailable: false, occupiedBy: student._id },
