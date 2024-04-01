@@ -1,6 +1,7 @@
 const Slot = require("../models/slot");
 const User = require("../models/user");
 const asyncHandler = require('../middlewares/async');
+const axios = require("axios");
 
 const getAllSlots = asyncHandler (async (req, res) => {
     const slots = await Slot.find({})
@@ -25,61 +26,63 @@ const getSingleSlot =  asyncHandler (async (req, res) => {
  
 });
 
+
 const updateSlot = asyncHandler(async (req, res) => {
   const { studentId } = req.body;
   const { slotNumber } = req.params;
 
-  if (!studentId) {
-    return res.status(400).json({ message: "Please provide studentId" });
-  }
+  try {
+    if (!studentId) {
+      return res.status(400).json({ message: "Please provide studentId" });
+    }
 
-  const student = await User.findOne({ studentId }).select(
-    "-__v -createdAt -updatedAt"
-  );
+    const url = `https://tsa-database-server.onrender.com/api/v1/student/check`;
+    const { data : student } = await axios.post(url, {studentId});
 
-  if (!student) {
-    return res
-      .status(400)
-      .json({ message: `No student with ID:${studentId}` });
-  }
+    // console.log(student);
 
-  // Restrict student from taking more than one slot
-  if (student.slot) {
-    // console.log(student.slot);
-    return res.status(400).json({
-      message: `${student.name} is already assigned to slot ${student.slot}`,
-    });
-  }
+    if (!student._id) {
+      return res.status(400).json({ message: `No student found with ID: ${studentId}` });
+    }
 
-  const slot = await Slot.findOneAndUpdate(
-    { slotNumber, isAvailable: true, occupiedBy: null }, 
-    { isAvailable: false, occupiedBy: student._id },
-    { new: true } 
-  );
+    const existingSlot = await Slot.findOne({ "occupiedBy._id": student._id });
+    if (existingSlot) {
+      return res.status(400).json({ message: `Student already occupied slot: ${existingSlot.slotNumber}` });
+    }
 
-  if (!slot) {
-    return res.status(404).json({ message: `Slot ${slotNumber} does not exist or is occupied` });
-  }
+    const slot = await Slot.findOneAndUpdate(
+      { slotNumber, isAvailable: true, occupiedBy: null },
+      { isAvailable: false, occupiedBy: student },
+      { new: true }
+    );
+    
+    if (!slot) {
+      return res.status(404).json({ message: `Slot ${slotNumber} is not available or occupied` });
+    } 
 
-  student.slot = slotNumber;
-  await student.save();
-
-  // Schedule expiration after 10 hours
-  if(student.slot){
     setTimeout(async () => {
-      student.slot = null;
-      await student.save();
-      await Slot.findOneAndUpdate({ slotNumber }, { isAvailable: true, occupiedBy: null });
-      await User.updateMany({}, { slot: null });
-      console.log(`Slot expired for student ${studentId} in slot ${slotNumber}`);
-    }, 10 * 60 * 60 * 1000); 
-  }
+      try {
+        const updatedSlot = await Slot.findOneAndUpdate(
+          { slotNumber },
+          { isAvailable: true, occupiedBy: null },
+          { new: true }
+        );
+        if (updatedSlot) {
+          console.log(`Slot expired for student ${studentId} in slot ${slotNumber}`);
+        } else {
+          console.log(`Failed to update slot for student ${studentId} in slot ${slotNumber}`);
+        }
+      } catch (error) {
+        console.error("Error updating slot:", error);
+      }
+    }, 60 * 1000);
+    
 
-  return res.json({
-    message: "Parking Confirmed!",
-    slotNumber: slot.slotNumber,
-    student,
-  });
+    return res.json({ message: "Parking Confirmed!", slot });
+  } catch (error) {
+    console.error("Error updating slot:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  } 
 });
 
 

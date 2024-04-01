@@ -10,6 +10,7 @@
   "author": "Babajide Odesanya",
   "license": "MIT",
   "dependencies": {
+    "axios": "^1.6.8",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.1",

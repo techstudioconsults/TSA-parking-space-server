@@ -11,8 +11,7 @@ const slotSchema = new mongoose.Schema(
       required: true,
     },
     occupiedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: Object,
     },
   },
   {
