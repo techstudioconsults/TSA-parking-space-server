@@ -75,7 +75,7 @@ const updateSlot = asyncHandler(async (req, res) => {
       } catch (error) {
         console.error("Error updating slot:", error);
       }
-    }, 60 * 1000);
+    }, 5 * 60 * 1000);
     
 
     return res.json({ message: "Parking Confirmed!", slot });
