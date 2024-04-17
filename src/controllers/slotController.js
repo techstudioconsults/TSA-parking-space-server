@@ -111,7 +111,7 @@ const getSingleStudent = asyncHandler(async (req, res) => {
 const refreshAllSlots = asyncHandler(async (req, res) => {
     await Slot.updateMany({}, { isAvailable: true, occupiedBy: null });
     await User.updateMany({}, { slot: null });
-    res.json({ message: "Slot availability refreshed successfully." });  
+    res.json({ message: "Slots refreshed successfully." });  
 });
 
 const refreshSingleSlot = asyncHandler(async (req, res) => {
