@@ -5,7 +5,8 @@ const {
   getSingleSlot,
   getAllUsers,
   getSingleStudent,
-  refreshSlotAvailability,
+  refreshAllSlots,
+  refreshSingleSlot,
 } = require("../controllers/slotController");
 const methodNotAllowed = require("../utils/methodNotAllowed");
 
@@ -18,10 +19,11 @@ router
 router
 .route("/user/:studentId").get(getSingleStudent).all(methodNotAllowed);
 router
-.route("/refresh").post(refreshSlotAvailability).all(methodNotAllowed);
+.route("/refresh").post(refreshAllSlots).all(methodNotAllowed);
 router
   .route("/:slotNumber")
   .get(getSingleSlot)
+  .post(refreshSingleSlot)
   .patch(updateSlot)
   .all(methodNotAllowed);
 

@@ -108,11 +108,45 @@ const getSingleStudent = asyncHandler(async (req, res) => {
  
 });
 
-const refreshSlotAvailability = asyncHandler(async (req, res) => {
+const refreshAllSlots = asyncHandler(async (req, res) => {
     await Slot.updateMany({}, { isAvailable: true, occupiedBy: null });
     await User.updateMany({}, { slot: null });
     res.json({ message: "Slot availability refreshed successfully." });  
 });
+
+const refreshSingleSlot = asyncHandler(async (req, res) => {
+  const { slotNumber } = req.params;
+
+  try {
+    const slot = await Slot.findOne({ slotNumber });
+
+    if (!slot) {
+      return res.status(404).json({ message: `Slot ${slotNumber} not found` });
+    }
+
+    if (!slot.occupiedBy) {
+      return res.status(400).json({ message: `Slot ${slotNumber} is not occupied` });
+    }
+
+    // Refresh the slot availability
+    const updatedSlot = await Slot.findOneAndUpdate(
+      { slotNumber },
+      { isAvailable: true, occupiedBy: null },
+      { new: true }
+    );
+
+    if (!updatedSlot) {
+      return res.status(500).json({ message: `Failed to refresh slot ${slotNumber}` });
+    }
+
+    return res.json({ message: `Slot ${slotNumber} refreshed successfully`, slot: updatedSlot });
+  } catch (error) {
+    console.error("Error refreshing slot availability:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+
 
 module.exports = {
   getAllSlots,
@@ -120,5 +154,6 @@ module.exports = {
   getSingleSlot,
   getAllUsers,
   getSingleStudent,
-  refreshSlotAvailability,
+  refreshAllSlots,
+  refreshSingleSlot,
 };
