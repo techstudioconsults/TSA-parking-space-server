@@ -47,7 +47,7 @@ const updateSlot = asyncHandler(async (req, res) => {
 
     const existingSlot = await Slot.findOne({ "occupiedBy._id": student._id });
     if (existingSlot) {
-      return res.status(400).json({ message: `Student already occupied slot: ${existingSlot.slotNumber}` });
+      return res.status(400).json({ message: `You've already parked on slot '${existingSlot.slotNumber}'` });
     }
 
     const slot = await Slot.findOneAndUpdate(
